@@ -33,6 +33,43 @@
 
 })();
 
+    
+// http://docs.jquery.com/Plugins/Validation/Methods/creditcard
+// based on http://en.wikipedia.org/wiki/Luhn
+jQuery.validator.addMethod("creditcard", function(value, element) {
+  if ( this.optional(element) )
+    return "dependency-mismatch";
+	// accept only digits and dashes
+	if (/[^0-9-]+/.test(value))
+	  return false;
+	  var nCheck = 0,
+	      nDigit = 0,
+		  bEven = false;
+      value = value.replace(/\D/g, "");
+
+	  for (var n = value.length - 1; n >= 0; n--) {
+		var cDigit = value.charAt(n);
+		var nDigit = parseInt(cDigit, 10);
+		if (bEven) {
+		  if ((nDigit *= 2) > 9)
+			nDigit -= 9;
+		  }
+		  nCheck += nDigit;
+		  bEven = !bEven;
+	  }
+	  return (nCheck % 10) === 0;
+}, jQuery.validator.format("Please enter a valid credit card."));
+
+// http://docs.jquery.com/Plugins/Validation/Methods/min
+jQuery.validator.addMethod("min", function( value, element, param ) {
+  return this.optional(element) || value >= param;
+}, jQuery.validator.format("Please enter a value greater than or equal to {0}."));
+
+// http://docs.jquery.com/Plugins/Validation/Methods/max
+jQuery.validator.addMethod("max", function( value, element, param ) {
+  return this.optional(element) || value <= param;
+}, jQuery.validator.format("Please enter a value less than or equal to {0}."));
+
 jQuery.validator.addMethod("letterswithbasicpunc", function(value, element) {
 	return this.optional(element) || /^[a-z-.,()'\"\s]+$/i.test(value);
 }, "Letters or punctuation only please");

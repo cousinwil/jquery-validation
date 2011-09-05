@@ -271,15 +271,12 @@ $.extend($.validator, {
 		dateISO: "Please enter a valid date (ISO).",
 		number: "Please enter a valid number.",
 		digits: "Please enter only digits.",
-		creditcard: "Please enter a valid credit card number.",
 		equalTo: "Please enter the same value again.",
 		accept: "Please enter a value with a valid extension.",
 		maxlength: $.validator.format("Please enter no more than {0} characters."),
 		minlength: $.validator.format("Please enter at least {0} characters."),
 		rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
-		range: $.validator.format("Please enter a value between {0} and {1}."),
-		max: $.validator.format("Please enter a value less than or equal to {0}."),
-		min: $.validator.format("Please enter a value greater than or equal to {0}.")
+		range: $.validator.format("Please enter a value between {0} and {1}.")
 	},
 
 	autoCreateRanges: false,
@@ -762,8 +759,7 @@ $.extend($.validator, {
 		dateDE: {dateDE: true},
 		number: {number: true},
 		numberDE: {numberDE: true},
-		digits: {digits: true},
-		creditcard: {creditcard: true}
+		digits: {digits: true}
 	},
 
 	addClassRules: function(className, rules) {
@@ -997,16 +993,6 @@ $.extend($.validator, {
 			return this.optional(element) || ( length >= param[0] && length <= param[1] );
 		},
 
-		// http://docs.jquery.com/Plugins/Validation/Methods/min
-		min: function( value, element, param ) {
-			return this.optional(element) || value >= param;
-		},
-
-		// http://docs.jquery.com/Plugins/Validation/Methods/max
-		max: function( value, element, param ) {
-			return this.optional(element) || value <= param;
-		},
-
 		// http://docs.jquery.com/Plugins/Validation/Methods/range
 		range: function( value, element, param ) {
 			return this.optional(element) || ( value >= param[0] && value <= param[1] );
@@ -1042,34 +1028,6 @@ $.extend($.validator, {
 		// http://docs.jquery.com/Plugins/Validation/Methods/digits
 		digits: function(value, element) {
 			return this.optional(element) || /^\d+$/.test(value);
-		},
-
-		// http://docs.jquery.com/Plugins/Validation/Methods/creditcard
-		// based on http://en.wikipedia.org/wiki/Luhn
-		creditcard: function(value, element) {
-			if ( this.optional(element) )
-				return "dependency-mismatch";
-			// accept only digits and dashes
-			if (/[^0-9-]+/.test(value))
-				return false;
-			var nCheck = 0,
-				nDigit = 0,
-				bEven = false;
-
-			value = value.replace(/\D/g, "");
-
-			for (var n = value.length - 1; n >= 0; n--) {
-				var cDigit = value.charAt(n);
-				var nDigit = parseInt(cDigit, 10);
-				if (bEven) {
-					if ((nDigit *= 2) > 9)
-						nDigit -= 9;
-				}
-				nCheck += nDigit;
-				bEven = !bEven;
-			}
-
-			return (nCheck % 10) == 0;
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/accept
